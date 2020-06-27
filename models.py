@@ -85,9 +85,10 @@ class FaultTypes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fault_type = db.Column(String,nullable=False)
     it_section = db.Column(db.Integer, db.ForeignKey('ITSections.id',ondelete='cascade'),nullable=False)
+    is_active = db.Column(db.Boolean, nullable=False,default=True,server_default='True')
 
-    def __init__(self, name, it_section):
-        self.name = name
+    def __init__(self, fault_type, it_section):
+        self.fault_type = fault_type
         self.it_section = it_section
 
     def format(self):

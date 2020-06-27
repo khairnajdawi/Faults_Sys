@@ -1,0 +1,33 @@
+{% extends 'layouts/main.html' %}
+{% block title %}IT Section Info{% endblock %}
+{% block content %}
+<a href="/itsections" class="btn btn-default"><i class="fa fa-arrow-left"></i>&nbsp;back to IT Sections</a>
+      <h3 class="form-heading">IT Section Info</h3>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <label class="form-control">{{section.name}}</label>
+      </div>
+      <div class="form-group">
+        <label for="is_active">Active ?</label>
+        <label class="form-control">{% if section.is_active %} Active{%else%} Inactive {%endif %}</label>
+      </div>
+      <hr>
+      <h4>Fault Types</h4>
+      <table class="table table-hover table-responsive">
+          <thead>
+              <tr>
+                  <th>Fault Type</th>
+                  <th>Status</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for type in section.fault_types %}
+                <tr>
+                    <td>{{type.fault_type}}</td>
+                    <td>{% if type.is_active %} Active{%else%} Inactive {%endif %}</td>
+                </tr>
+              {% endfor %}
+              <tr></tr>
+          </tbody>
+      </table>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Delete Fault Type{% endblock %}
+{% block content %}
+<a href="/faulttypes" class="btn btn-default"><i class="fa fa-arrow-left"></i>&nbsp;back to IT Sections</a>
+  <div class="form-wrapper">
+      <h3 class="form-heading">Delete Fault Types : {{fault_type.fault_type}}</h3>
+      <h4>Are You sure you want to delete this fault type ?</h4>
+      <form action="" method="POST" class="form">
+          <input type="submit" class="btn btn-danger my-button" value="Delete"/>
+      </form>
+      <a href="/faulttypes" class="btn btn-success my-button" >No</a>     
+  </div>
+{% endblock %}

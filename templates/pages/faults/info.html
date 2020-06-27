@@ -1,0 +1,16 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Fault Type Info{% endblock %}
+{% block content %}
+<a href="/faulttypes" class="btn btn-default"><i class="fa fa-arrow-left"></i>&nbsp;back to fault types</a>
+  <div class="form-wrapper">
+      <h3 class="form-heading">Fault Type</h3>
+      <div class="form-group">
+        <label for="fault_type">Fault Type</label>
+        <label class="form-control">{{fault_type.fault_type}}</label>
+      </div>
+      <div class="form-group">
+        <label for="is_section">IT Section</label>
+        <label class="form-control">{{fault_type.section_name}}</label>
+      </div>
+  </div>
+{% endblock %}

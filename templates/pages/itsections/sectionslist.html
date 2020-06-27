@@ -1,0 +1,32 @@
+{% extends 'layouts/main.html' %}
+{% block title %}IT Sections{% endblock %}
+{% block content %}
+<h2>IT Sections</h2>
+<a href="/itsections/add" class="btn btn-default"><i class="fas fa-plus"></i>Add new Section</a>
+<div class="row box-out">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Section Name</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for section in itsections %}
+            <tr>
+                <td>{{section.name}}</td>
+                <td> {% if section.is_active %} Active{%else%} Inactive {%endif %}</td>
+                <td>
+                    <a href="/itsections/{{section.id}}"><i class='fa fa-info'></i></a>
+                    &nbsp;
+                    <a href="/itsections/{{section.id}}/edit"><i class='fa fa-edit'></i></a>
+                    &nbsp;
+                    <a href="/itsections/{{section.id}}/delete"><i class='fa fa-trash'></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -95,8 +95,8 @@
           </ul>
           <ul class="nav navbar-nav">
             <li {% if request.endpoint == 'branches' %} class="active" {% endif %}><a href="{{ url_for('branches') }}">Branches</a></li>
-            <li {% if request.endpoint == 'faulttypes' %} class="active" {% endif %}><a href="{{ url_for('index') }}">Fault Types</a></li>
-            <li {% if request.endpoint == 'itsections' %} class="active" {% endif %}><a href="{{ url_for('index') }}">IT Sections</a></li>
+            <li {% if request.endpoint == 'faulttypes' %} class="active" {% endif %}><a href="{{ url_for('faulttypes') }}">Fault Types</a></li>
+            <li {% if request.endpoint == 'itsections' %} class="active" {% endif %}><a href="{{ url_for('itsections') }}">IT Sections</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

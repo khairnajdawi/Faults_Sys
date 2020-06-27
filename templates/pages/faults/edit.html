@@ -1,0 +1,19 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Fault Type{% endblock %}
+{% block content %}
+<a href="/faulttypes" class="btn btn-default"><i class="fa fa-arrow-left"></i>&nbsp;back to fault types</a>
+  <div class="form-wrapper">
+    <form method="post" class="form">
+      <h3 class="form-heading">Add new Fault Type</h3>
+      <div class="form-group">
+        <label for="fault_type">Fault Type</label>
+        {{ form.fault_type(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <div class="form-group">
+        <label for="is_section">IT Section</label>
+        {{ form.it_section(class_ = 'form-control', autofocus = true) }}
+      </div>
+      <input type="submit" value="Update Fault Type" class="btn btn-primary btn-lg btn-block">
+    </form>
+  </div>
+{% endblock %}
