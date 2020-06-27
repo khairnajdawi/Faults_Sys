@@ -1,0 +1,16 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Edit Branch{% endblock %}
+{% block content %}
+<a href="/branches" class="btn btn-default"><i class="fa fa-arrow-left"></i>&nbsp;back to branches</a>
+  <div class="form-wrapper">
+      <h3 class="form-heading">Branch Info</h3>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <label class="form-control">{{branch.name}}</label>
+      </div>
+      <div class="form-group">
+        <label for="is_active">Active ?</label>
+        <label class="form-control">{% if branch.is_active %} Active{%else%} Inactive {%endif %}</label>
+      </div>
+  </div>
+{% endblock %}
