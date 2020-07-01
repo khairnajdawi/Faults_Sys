@@ -3,6 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import func
 import json
 import os
+import enum
+
 database_path = os.environ['DATABASE_URL']
 
 db = SQLAlchemy()
@@ -99,6 +101,18 @@ class FaultTypes(db.Model):
 
 
 '''
+Faults status enum
+used to declare the status of the fault as one of
+New, Under Wrok, or Finished
+'''
+
+class FaultStatus(enum.Enum):
+    New='New'
+    UnderWrok='Under Wrok'
+    Finished='Finished'
+
+
+'''
 Faults
 Faults that get reported by branches to it sections
 for fault status, use : 
@@ -115,8 +129,11 @@ class Faults(db.Model):
     fault_description = db.Column(db.String,nullable=False)
     branch_id = db.Column(db.Integer,db.ForeignKey('Branches.id',ondelete='cascade'),nullable=False)
     actions = db.relationship('FaultActions',backref='actions',cascade='all,delete',lazy=True)
-    status = db.Column(db.Integer,nullable=False,default=1,server_default='1')
-
+    status = db.Column(db.Enum(FaultStatus),
+        nullable=False,
+        default=FaultStatus.New.value,
+        server_default=FaultStatus.New.value
+        )
 
 '''
 Actions

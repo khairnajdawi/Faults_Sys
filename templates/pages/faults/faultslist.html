@@ -1,0 +1,32 @@
+{% extends 'layouts/main.html' %}
+{% block title %}Fault Types{% endblock %}
+{% block content %}
+<h2>Fault Types</h2>
+<a href="/faults/add" class="btn btn-default"><i class="fas fa-plus"></i>&nbsp;Report new Fault</a>
+<div class="row box-out">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>Fault Type</th>
+                <th>Fault Description</th>
+                <th>Branch</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {%for fault in faults %}
+            <tr>
+                <td>{{fault.fault_type}}</td>
+                <td>{{fault.fault_description}}</td>
+                <td>{{fault.branch_name}}</td>
+                <td> {{ fault.status.value }}</td>
+                <td>
+                    <a href="/faults/{{fault.id}}"><i class='fa fa-info'></i></a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -97,6 +97,7 @@
             <li {% if request.endpoint == 'branches' %} class="active" {% endif %}><a href="{{ url_for('branches') }}">Branches</a></li>
             <li {% if request.endpoint == 'faulttypes' %} class="active" {% endif %}><a href="{{ url_for('faulttypes') }}">Fault Types</a></li>
             <li {% if request.endpoint == 'itsections' %} class="active" {% endif %}><a href="{{ url_for('itsections') }}">IT Sections</a></li>
+            <li {% if request.endpoint == 'faults' %} class="active" {% endif %}><a href="{{ url_for('faults') }}">Faults</a></li>
           </ul>
         </div><!--/.nav-collapse -->
       </div>

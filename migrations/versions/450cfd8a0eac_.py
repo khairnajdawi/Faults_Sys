@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7bee734c5616
+Revision ID: 450cfd8a0eac
 Revises: 
-Create Date: 2020-06-26 19:11:37.107652
+Create Date: 2020-06-28 20:02:05.809824
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7bee734c5616'
+revision = '450cfd8a0eac'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,19 +21,20 @@ def upgrade():
     op.create_table('Branches',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('is_active', sa.Boolean(), nullable=False,server_default='true',default=True),
+    sa.Column('is_active', sa.Boolean(), server_default='True', nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('ITSections',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('is_active', sa.Boolean(), nullable=False,server_default='true',default=True),
+    sa.Column('is_active', sa.Boolean(), server_default='True', nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('FaultTypes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('fault_type', sa.String(), nullable=False),
     sa.Column('it_section', sa.Integer(), nullable=False),
+    sa.Column('is_active', sa.Boolean(), server_default='True', nullable=False),
     sa.ForeignKeyConstraint(['it_section'], ['ITSections.id'], ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')
     )
@@ -42,7 +43,7 @@ def upgrade():
     sa.Column('fault_type', sa.Integer(), nullable=False),
     sa.Column('fault_description', sa.String(), nullable=False),
     sa.Column('branch_id', sa.Integer(), nullable=False),
-    sa.Column('status', sa.Integer(), nullable=False,server_default='1',default=1),
+    sa.Column('status', sa.Enum('Finished', 'New', 'UnderWrok', name='faultstatus'), server_default='New', nullable=False),
     sa.ForeignKeyConstraint(['branch_id'], ['Branches.id'], ondelete='cascade'),
     sa.ForeignKeyConstraint(['fault_type'], ['FaultTypes.id'], ondelete='cascade'),
     sa.PrimaryKeyConstraint('id')

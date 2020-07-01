@@ -1,7 +1,7 @@
 import os
 from flask import Flask,render_template, request, Response, flash, redirect, url_for,jsonify,abort
 from flask_cors import CORS
-from models import db,setup_db,Branches,FaultTypes,ITSections
+from models import db,setup_db,Branches,FaultTypes,ITSections,Faults
 from flask_moment import Moment
 from flask_wtf import FlaskForm
 from forms import *
@@ -228,7 +228,7 @@ def create_app(test_config=None):
         types = db.session.query(FaultTypes.id,FaultTypes.fault_type,FaultTypes.is_active,ITSections.name.label("section_name"))\
             .outerjoin(ITSections,FaultTypes.it_section==ITSections.id)\
             .all()    
-        return render_template('pages/faults/typeslist.html',types=types)
+        return render_template('pages/faulttypes/typeslist.html',types=types)
 
     @app.route('/faulttypes/<int:type_id>')
     def faulttypes_info(type_id):
@@ -236,14 +236,17 @@ def create_app(test_config=None):
             .outerjoin(ITSections,FaultTypes.it_section==ITSections.id)\
             .filter(FaultTypes.id==type_id)\
             .one_or_none() 
-        return render_template('pages/faults/info.html',fault_type=fault_type)
+        if(fault_type):
+            return render_template('pages/faults/info.html',fault_type=fault_type)
+        else:
+            abort(404)
 
 
 
     @app.route('/faulttypes/add')
     def add_faulttypes_form(): 
         form = AddFaultTypeForm()
-        return render_template('pages/faults/add.html',form=form)
+        return render_template('pages/faulttypes/add.html',form=form)
 
 
     @app.route('/faulttypes/add',methods=['POST'])
@@ -268,7 +271,7 @@ def create_app(test_config=None):
         if(success):
             return redirect(url_for('faulttypes'))
         else:
-            return render_template('pages/faults/add.html',form=form)
+            return render_template('pages/faulttypes/add.html',form=form)
 
 
     @app.route('/faulttypes/<int:type_id>/edit')
@@ -277,7 +280,8 @@ def create_app(test_config=None):
         fault_type = FaultTypes.query.get(type_id)
         form.fault_type.data =fault_type.fault_type
         form.it_section.data = fault_type.it_section
-        return render_template('pages/faults/edit.html',form=form)
+        form.is_active.data = "True" if fault_type.is_active else "False"
+        return render_template('pages/faulttypes/edit.html',form=form)
 
 
     @app.route('/faulttypes/<int:type_id>/edit',methods=['POST'])
@@ -288,6 +292,7 @@ def create_app(test_config=None):
         try:
             fault_type.fault_type = form.fault_type.data
             fault_type.it_section = form.it_section.data
+            fault_type.is_active = form.is_active=="True"
             db.session.commit()
             updated=True
             flash('Fault Type : \"' + fault_type.fault_type + '\" updated successfully!','success')
@@ -300,13 +305,13 @@ def create_app(test_config=None):
         if(updated):
             return redirect(url_for('faulttypes'))
         else:
-            return render_template('pages/faults/edit.html',form=form)
+            return render_template('pages/faulttypes/edit.html',form=form)
 
 
     @app.route('/faulttypes/<int:type_id>/delete')
     def delete_faulttypes_form(type_id): 
         fault_type = FaultTypes.query.get(type_id)
-        return render_template('pages/faults/delete.html',fault_type=fault_type)
+        return render_template('pages/faulttypes/delete.html',fault_type=fault_type)
 
 
     @app.route('/faulttypes/<int:type_id>/delete',methods=['POST'])
@@ -327,7 +332,60 @@ def create_app(test_config=None):
         if(deleted):
             return redirect(url_for('faulttypes'))
         else:
-            return render_template('pages/faults/delete.html',fault_type=fault_type)
+            return render_template('pages/faulttypes/delete.html',fault_type=fault_type)
+
+
+    @app.route('/faults')
+    def faults():
+        faults = db.session.query(Faults.id,Faults.fault_description,Branches.name.label("branch_name"),Faults.status,FaultTypes.fault_type)\
+            .outerjoin(Branches,Branches.id==Faults.branch_id)\
+            .outerjoin(FaultTypes,FaultTypes.id == Faults.fault_type)
+        return render_template('pages/faults/faultslist.html',faults=faults)
+
+
+    @app.route('/faults/<int:fault_id>')
+    def fault_info(fault_id):
+        fault = db.session.query(Faults.id,Faults.fault_description,Branches.name.label("branch_name"),Faults.status,FaultTypes.fault_type)\
+            .outerjoin(Branches,Branches.id==Faults.branch_id)\
+            .outerjoin(FaultTypes,FaultTypes.id == Faults.fault_type)\
+            .filter(Faults.id==fault_id)\
+            .one_or_none()
+        # TODO get fault's actions
+        return render_template('pages/faults/faultinfo.html',fault=fault)
+
+
+
+    @app.route('/faults/add')
+    def add_fault_form():
+        form = AddFaultForm()
+        return render_template('pages/faults/add.html',form=form)
+
+
+    @app.route('/faults/add',methods=['POST'])
+    def add_fault():
+        form = AddFaultForm(request.form)
+        # TODO get branch id from stored session or cookies
+        new_fault = Faults(
+            fault_type = form.fault_type.data,
+            fault_description = form.fault_description.data,
+            branch_id = 1
+        )
+        added = False
+        try:
+            db.session.add(new_fault)
+            db.session.commit()
+            added=True
+        except:
+            db.session.rollback()
+        finally:
+            db.session.close()
+        
+        if(added):
+            flash('Fault reported successfully!','success')
+            return redirect(url_for('faults'))
+        else:
+            flash('Fault could not be reported!','danger')
+            return render_template('pages/faults/add.html',form=form)
 
 
 
